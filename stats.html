@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Stats</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+<h1>统计数据</h1>
+<div id="totalQuantity"></div>
+<table>
+    <thead>
+    <tr>
+        <th>员工名字</th>
+        <th>步骤名字</th>
+        <th>计件数量</th>
+    </tr>
+    </thead>
+    <tbody id="statsTableBody">
+    <!-- 数据将在这里填充 -->
+    </tbody>
+</table>
+
+<button onclick="window.location.href='/'">继续添加</button>
+<script>
+    fetch('/employee-stats')
+        .then(response => response.json())
+        .then(data => {
+            const statsTableBody = document.getElementById('statsTableBody');
+            const totalQuantityDiv = document.getElementById('totalQuantity');
+
+            totalQuantityDiv.textContent = '数量总计: ' + data.totalQuantity;
+
+            data.employeeStats.forEach(stat => {
+                const row = document.createElement('tr');
+
+                const nameCell = document.createElement('td');
+                nameCell.textContent = stat.Name;
+                row.appendChild(nameCell);
+
+                const stepCell = document.createElement('td');
+                stepCell.textContent = stat.StepName;
+                row.appendChild(stepCell);
+
+                const countCell = document.createElement('td');
+                countCell.textContent = stat.PieceCount;
+                row.appendChild(countCell);
+
+                statsTableBody.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Error fetching employee stats:', error));
+</script>
+</body>
+</html>

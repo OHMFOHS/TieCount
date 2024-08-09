@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Employee</title>
+    <script>
+        // 获取工序列表并填充下拉菜单
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/steps')
+                .then(response => response.json())
+                .then(data => {
+                    const stepSelect = document.getElementById('steps');
+                    data.forEach(step => {
+                        const option = new Option(step.StepName, step.StepID);
+                        stepSelect.add(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching steps data:', error));
+        });
+
+        function addStepOption() {
+            const stepsContainer = document.getElementById('steps-container');
+            const newSelect = document.createElement('select');
+            newSelect.name = 'steps';
+            newSelect.required = true;
+            stepsContainer.appendChild(newSelect);
+
+            fetch('/steps')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(step => {
+                        const option = new Option(step.StepName, step.StepID);
+                        newSelect.add(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching steps data:', error));
+        }
+    </script>
+</head>
+<body>
+<h1>增加员工</h1>
+<form action="/add-employee" method="POST">
+    <label for="Name">员工姓名:</label>
+    <input type="text" id="Name" name="Name" required><br><br>
+
+    <div id="steps-container">
+        <label for="steps">步骤：</label>
+        <select id="steps" name="steps" required></select>
+    </div>
+    <button type="button" onclick="addStepOption()">增加另一个步骤</button><br><br>
+
+    <input type="submit" value="增加员工">
+</form>
+
+<button onclick="window.location.href='/'">返回上级</button>
+</body>
+</html>

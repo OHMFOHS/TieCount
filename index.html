@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>领带流水线统计</title>
+    <style>
+        select {
+            width: 200px; /* 设置选择框的宽度 */
+            height: 30px; /* 设置选择框的高度 */
+            font-size: 16px; /* 设置选择框内文字的大小 */
+            padding: 5px; /* 设置选择框的内边距 */
+        }
+
+        body {
+            background-color:lightblue;
+        }
+        .centerbox {
+            height: 400px;
+            width: 600px;
+            background-color: #fff;
+            margin: auto; /* 水平方向和垂直方向都居中 */
+            padding: 20px 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+    </style>
+
+    <script>
+        // // 获取员工列表并填充下拉菜单
+        // document.addEventListener("DOMContentLoaded", function() {
+        //     fetch('/employees')
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             const carJiaoSelect = document.getElementById('CarJiaoEmployeeID');
+        //             const tangJiaoSelect = document.getElementById('TangJiaoEmployeeID');
+        //             const tangShenSelect = document.getElementById('TangShenEmployeeID');
+        //             const fengShenSelect = document.getElementById('FengShenEmployeeID');
+        //             const shangBiaoSelect = document.getElementById('ShangBiaoEmployeeID');
+        //
+        //             data.forEach(employee => {
+        //                 const option = new Option(employee.Name, employee.EmployeeID);
+        //                 carJiaoSelect.add(option.cloneNode(true));
+        //                 tangJiaoSelect.add(option.cloneNode(true));
+        //                 tangShenSelect.add(option.cloneNode(true));
+        //                 fengShenSelect.add(option.cloneNode(true));
+        //                 shangBiaoSelect.add(option.cloneNode(true));
+        //             });
+        //         })
+        //         .catch(error => console.error('Error fetching employee data:', error));
+        // });
+
+        // 获取从事某步骤的员工列表并填充下拉菜单
+        function fetchEmployeesForStep(stepID, selectElementId) {
+            fetch(`/employees/${stepID}`)
+                .then(response => response.json())
+                .then(data => {
+                    const selectElement = document.getElementById(selectElementId);
+                    selectElement.innerHTML = ''; // 清空已有选项
+                    data.forEach(employee => {
+                        const option = new Option(employee.Name, employee.EmployeeID);
+                        selectElement.add(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching employee data:', error));
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            fetchEmployeesForStep(1, 'CarJiaoEmployeeID'); // 初始化车角员工列表
+            fetchEmployeesForStep(2, 'TangJiaoEmployeeID'); // 初始化烫角员工列表
+            fetchEmployeesForStep(3, 'TangShenEmployeeID'); // 初始化烫身员工列表
+            fetchEmployeesForStep(4, 'FengShenEmployeeID'); // 初始化缝身员工列表
+            fetchEmployeesForStep(5, 'ShangBiaoEmployeeID'); // 初始化商标员工列表
+        });
+
+    </script>
+</head>
+<body>
+<h1>增加新的一张记录</h1>
+<div class="centerbox">
+    <form action="/add-workflow" method="POST">
+        <label for="CarJiaoEmployeeID">车角员工:</label>
+        <select id="CarJiaoEmployeeID" name="CarJiaoEmployeeID" required></select><br><br>
+
+        <label for="TangJiaoEmployeeID">烫角员工:</label>
+        <select id="TangJiaoEmployeeID" name="TangJiaoEmployeeID" required></select><br><br>
+
+        <label for="TangShenEmployeeID">烫身员工:</label>
+        <select id="TangShenEmployeeID" name="TangShenEmployeeID" required></select><br><br>
+
+        <label for="FengShenEmployeeID">缝身员工:</label>
+        <select id="FengShenEmployeeID" name="FengShenEmployeeID" required></select><br><br>
+
+        <label for="ShangBiaoEmployeeID">商标员工:</label>
+        <select id="ShangBiaoEmployeeID" name="ShangBiaoEmployeeID" required></select><br><br>
+
+        <label for="Quantity">数量:</label>
+        <input type="number" id="Quantity" name="Quantity" required><br><br>
+
+        <input type="submit" value="添加记录">
+    </form>
+    <br><br>
+    <button onclick="window.location.href='/stats'">查看统计</button>
+    <button onclick="window.location.href='/add-employee'">增加员工</button>
+
+</div>
+
+</body>
+</html>
